@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: Arial;
+  }
+
+  .header {
+    text-align: center;
+    padding: 32px;
+  }
+
+  .row {
+    display: -ms-flexbox; /* IE10 */
+    display: flex;
+    -ms-flex-wrap: wrap; /* IE10 */
+    flex-wrap: wrap;
+    padding: 0 4px;
+  }
+
+  /* Create four equal columns that sit next to each other */
+  .column {
+    -ms-flex: 25%; /* IE10 */
+    flex: 25%;
+    max-width: 25%;
+    padding: 0 4px;
+  }
+
+  .column img {
+    margin-top: 8px;
+    vertical-align: middle;
+    width: 100%;
+  }
+
+  /* Responsive layout - makes a two-column layout instead of four columns */
+  @media screen and (max-width: 800px) {
+    .column {
+      -ms-flex: 50%;
+      flex: 50%;
+      max-width: 50%;
+    }
+  }
+
+  /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+  @media screen and (max-width: 600px) {
+    .column {
+      -ms-flex: 100%;
+      flex: 100%;
+      max-width: 100%;
+    }
+  }
+
+  /* Styling for the code block */
+  pre code {
+    background-color: #eee;
+    border: 1px solid #999;
+    display: block;
+    padding: 20px;
+    margin: 20px auto; /* Add margin here and set auto for center alignment */
+    color: #333; /* Code text color */
+    word-wrap: break-word; /* Allow long lines to break and wrap */
+  }
+
+  /* Optional: Add a border-radius for rounded corners */
+  pre {
+    border-radius: 8px;
+  }
+</style>
+<body style="background-color:black;">
+
+<!-- Header -->
+<div class="header">
+  <H1><FONT COLOR=white>Project 4: Digital Materialities</H1>
+  <p><FONT COLOR=white>Gallery</p>
+</div>
+
+<!-- Photo Grid -->
+<div class="row"> 
+  <div class="column">
+    <img src="1.png" style="width:100%">
+    <img src="2.png" style="width:100%">
+    <img src="3.png" style="width:100%">
+    <img src="4.png" style="width:100%">
+  </div>
+  <div class="column">
+    <img src="8.png" style="width:100%">
+    <img src="9.png" style="width:100%">
+    <img src="10.png" style="width:100%">
+    <img src="11.png" style="width:100%">
+  </div>  
+  <div class="column">
+    <img src="14.png" style="width:100%">
+    <img src="15.png" style="width:100%">
+    <img src="12.png" style="width:100%">
+    <img src="5.png" style="width:100%">
+  </div>
+  <div class="column">
+    <img src="6.png" style="width:100%">
+    <img src="7.png" style="width:100%">
+    <img src="13.png" style="width:100%">
+    <img src="16.png" style="width:100%">
+  </div>
+</div>
+
+<!-- Center-aligned text -->
+<p style="text-align: center;"><FONT COLOR=white>The shader code could be tested in the ShaderToy</p>
+
+<!-- Code Block -->
+<pre>
+  <code>
+    void mainImage(out vec4 fragColor, in vec2 fragCoord)
+    {
+        float aspect_ratio = iResolution.y / iResolution.x;
+        vec2 uv = fragCoord.xy / iResolution.x;
+        uv -= vec2(0.5, 0.5 * aspect_ratio);
+        float rot = radians(-30. -iTime); // radians(45.0*sin(iTime));
+        mat2 rotation_matrix = mat2(cos(rot), -sin(rot), sin(rot), cos(rot));
+        uv = rotation_matrix * uv;
+        vec2 scaled_uv = 15.0 * uv;
+    
+        // Circular distance instead of square distance
+        float circle_dist = length(scaled_uv);
+    
+        vec2 tile = fract(scaled_uv);
+        float tile_dist = min(min(tile.x, 1.0 - tile.x), min(tile.y, 1.0 - tile.y));
+    
+        float edge = sin(iTime - circle_dist * 9.);
+        edge = mod(edge * edge, edge / edge);
+    
+        float value = mix(tile_dist, 1.0 - tile_dist, step(1.0, edge));
+        edge = pow(abs(1.0 - edge), 2.2) * 12.0;
+    
+        value = smoothstep(edge - 0.05, edge, 0.95 * value);
+    
+        value += circle_dist * 0.2; // Adjust the influence of the circular pattern
+        value *= 0.8 - 0.2;
+    
+        // Color transformation based on time
+        float redTransform = 0.5 + 0.5 * sin(iTime);
+        float greenTransform = 0.5 + 0.5 * sin(iTime + 2.0);
+        float blueTransform = 0.5 + 0.5 * sin(iTime + 4.0);
+    
+        // Apply color transformation
+        vec3 color = vec3(pow(value, 2.0), pow(value, 1.5), pow(value, 1.2));
+        color = vec3(color.r * redTransform, color.g * greenTransform, color.b * blueTransform);
+    
+        // Final output color
+        fragColor = vec4(color, 1.0);
+    }
+  </code>
+</pre>
+</body>
+</html>
